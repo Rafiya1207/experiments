@@ -13,7 +13,7 @@ function encodeWord(word, code) {
 
   for (let index = 0; index < word.length; index++) {
     const charPosition = getAlphabetPosition(word[index]);
-    const encodedPosition = charPosition + code;
+    const encodedPosition = (charPosition + code) % ALPHABETS.length;
     encodedWord += getAlphabet(encodedPosition);
   }
 
