@@ -20,7 +20,19 @@ function encodeWord(word, code) {
   return encodedWord;
 }
 
-const word = prompt('enter word');
+function encodeSentence(sentence, code) {
+  const words = sentence.split(' ');
+  const encodedWords = [];
+  
+  for (let index = 0; index < words.length; index++) {
+    const word = words[index];
+    encodedWords.push(encodeWord(word, code));
+  }
+
+  return encodedWords.join(' ');
+}
+
+const sentence = prompt('enter sentence: ');
 const code = parseInt(prompt('enter code'));
 
-console.log(encodeWord(word, code));
+console.log(encodeSentence(sentence, code));
