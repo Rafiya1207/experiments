@@ -2,33 +2,30 @@ function generateFilledRow(columns, char) {
   return char.repeat(columns);
 }
 
-function generateHollowRow(columns, char, thickness) {
+function generateHollowRow(columns, char,) {
   if (columns <= 2) {
     return char.repeat(columns);
   }
-  return char.repeat(thickness) + ' '.repeat(columns - (thickness * 2)) + char.repeat(thickness);
+  return char + ' '.repeat(columns - 2) + char;
 }
 
-function hollowRetangle(rows, columns, char, thickness) {
+function hollowRetangle(rows, columns, char) {
   const rectangle = [];
 
-  for (let row = 0; row < thickness; row++) {
-    rectangle.push(generateFilledRow(columns, char))
-  }
+  rectangle.push(generateFilledRow(columns, char))
 
-  for (let row = thickness; row < rows - thickness; row++) {
-    rectangle.push(generateHollowRow(columns, char, thickness));
+  for (let row = 1; row < rows - 1; row++) {
+    rectangle.push(generateHollowRow(columns, char));
   }
 
   if (rows > 1) {
-    for (let row = 0; row < thickness; row++) {
-      rectangle.push(generateFilledRow(columns, char))
-    }
+    rectangle.push(generateFilledRow(columns, char))
   }
   return rectangle.join('\n');
 }
 
 function generatePattern(rows, columns, char) {
+
   if (rows === 0 || columns === 0) {
     return '';
   }
@@ -53,7 +50,7 @@ function generateDimension(row, columns) {
 }
 
 function testForDimensions() {
-  const LIMIT = 10;
+  const LIMIT = 5;
 
   for (let row = 0; row < LIMIT; row++) {
     const dimension = generateDimension(row, LIMIT);
@@ -64,7 +61,7 @@ function testForDimensions() {
       const rows = dimension[curDimension][0];
       const columns = dimension[curDimension][1];
 
-      console.log(generatePattern(rows, columns, '+'));
+      console.log(generatePattern(rows, columns, '*'));
       console.log('-'.repeat(20));
     }
   }
