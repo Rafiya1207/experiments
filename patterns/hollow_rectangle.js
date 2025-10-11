@@ -39,14 +39,35 @@ function getInput() {
   return [dimensions, char];
 }
 
-function main() {
-  const inputs = getInput();
-  const rows = parseInt(inputs[0][0]);
-  const columns = parseInt(inputs[0][1]);
-  const char = inputs[1];
+function generateDimension(row, columns) {
+  const rowOfDimension = [];
 
-  console.log((generatePattern(rows, columns, char)));
-  main();
+  for (let column = 0; column < columns; column++) {
+    rowOfDimension.push([row, column]);
+  }
+  return rowOfDimension;
+}
+
+function main() {
+  // const inputs = getInput();
+  // const rows = parseInt(inputs[0][0]);
+  // const columns = parseInt(inputs[0][1]);
+  // const char = inputs[1];
+  const LIMIT = 10;
+  
+  for (let row = 0; row < LIMIT; row++) {
+    const dimension = generateDimension(row, LIMIT);
+
+    console.log(dimension);
+    
+    for (let curDimension = 0; curDimension < dimension.length; curDimension++) {
+      const rows = dimension[curDimension][0];
+      const columns = dimension[curDimension][1];
+  
+      console.log(generatePattern(rows, columns, '+'));
+      console.log('-'.repeat(20));
+    }
+  }
 }
 
 main();
