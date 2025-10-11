@@ -1,5 +1,9 @@
 const BOARD_SIZE = 15;
-const CHARS = [['M', 'W'], [')', '(']];
+const CHARS = [
+  ['M', 'W'], ['P', 'R'], ['B', 'D'], ['V', 'U'],
+  ['0', 'O'], ['J', 'L'], ['C', 'G'], ['E', 'F'],
+  ['A', 'V'], ['Z', 'S'], ['Q', 'O'], ['K', 'X']
+];
 
 function generateRow(row, columns, chars) {
   let rowPattern = [];
