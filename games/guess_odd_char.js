@@ -1,7 +1,7 @@
-const BOARD_SIZE = 5;
+const BOARD_SIZE = 10;
 const PAIRS = [
   ['M', 'W'], ['P', 'R'], ['B', 'D'], ['V', 'U'],
-  ['0', 'O'], ['J', 'L'], ['C', 'G'], ['E', 'F'],
+  ['D', 'O'], ['J', 'L'], ['C', 'G'], ['E', 'F'],
   ['A', 'V'], ['Z', 'S'], ['Q', 'O'], ['K', 'X']
 ];
 const ALPHABETS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -35,9 +35,6 @@ function confusionBoard(size, chars) {
 function encodeChar(char, alphabets) {
   const key = randomNumber(10);
   const position = (alphabets.indexOf(char) + key) % alphabets.length;
-
-  console.log(`key: ${key}`);
-  console.log(`position: ${position}`);
     
   return alphabets[position];
 }
@@ -45,8 +42,8 @@ function encodeChar(char, alphabets) {
 function pickOddChar(pair, alphabets) {
   const oddChar = encodeChar(pair[0], alphabets);
 
-  if (pair[1] === oddChar && pair[0] === oddChar) {
-    return alphabets[alphabets.indexOf(oddChar) + 1];
+  if (pair[1] === oddChar || pair[0] === oddChar) {
+    return alphabets[(alphabets.indexOf(oddChar) + 1) % alphabets.length];
   }
   return oddChar;
 }
@@ -81,10 +78,6 @@ function main() {
 
   const pattern = boardToPattern(board);
 
-  console.log(oddChar);
-  // console.log(board[randomRow][randomCol]);
-  // console.log(board);
-  console.log(randomRow, randomCol);
   console.log(pattern);
 }
 
