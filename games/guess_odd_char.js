@@ -26,10 +26,12 @@ function confusionPattern(size, chars) {
   const columns = size;
 
   for (let row = 0; row < rows; row++) {
-    pattern.push(generateRow(row, columns, chars));
+    pattern.push(generateRow(row, columns, chars).split(' '));
   }
 
-  return pattern.join('\n');
+  console.log(pattern);
+  
+  return pattern;
 }
 
 function encodeChar(char, alphabets) {
@@ -48,14 +50,27 @@ function pickOddChar(pair, alphabets) {
   return oddChar;
 }
 
+function generateRandomCell(boardSize) {
+  const row = randomNumber(boardSize - 1);
+  const column = randomNumber(boardSize - 1);
+
+  return [row, column];
+}
+
 function main() {
   const pairIndex = randomNumber(PAIRS.length);
   const pair = PAIRS[pairIndex];
   const oddChar = pickOddChar(pair, ALPHABETS);
+  const randomCell = generateRandomCell(BOARD_SIZE);
+  const pattern = confusionPattern(BOARD_SIZE, pair);
+  const randomRow = randomCell[0];
+  const randomCol = randomCell[1];
+  console.log(randomRow, randomCol, oddChar);
+  console.log(pattern);
 
-  console.log(oddChar);
+  pattern[randomRow][randomCol] = oddChar;
 
-  console.log((confusionPattern(BOARD_SIZE, pair)));
+  console.log(pattern);
 }
 
 main();
