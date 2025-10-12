@@ -65,7 +65,7 @@ function boardToPattern(board) {
   return pattern.join('\n');
 }
 
-function main() {
+function createOddCharBoard(PAIRS, ALPHABETS, BOARD_SIZE) {
   const pairIndex = randomNumber(PAIRS.length);
   const pair = PAIRS[pairIndex];
   const oddChar = pickOddChar(pair, ALPHABETS);
@@ -73,12 +73,33 @@ function main() {
   const board = confusionBoard(BOARD_SIZE, pair);
   const randomRow = randomCell[0];
   const randomCol = randomCell[1];
-
+  
   board[randomRow][randomCol] = oddChar;
+  
+  return [board, oddChar];
+}
 
+function askForGuess() {
+  return prompt('Enter odd character: ');
+}
+
+function checkGuess(expected, guessed) {
+  return expected === guessed;
+}
+
+function main() {
+  const oddCharBoard = createOddCharBoard(PAIRS, ALPHABETS, BOARD_SIZE);
+  const board = oddCharBoard[0];
+  const oddChar = oddCharBoard[1];
   const pattern = boardToPattern(board);
 
   console.log(pattern);
+  const response = askForGuess();
+  const isCorrect = checkGuess(oddChar, response);
+
+  const symbol = isCorrect ? '👍🏻' : '👎🏻';
+
+  console.log(symbol);
 }
 
 main();
