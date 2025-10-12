@@ -1,4 +1,4 @@
-const BOARD_SIZE = 15;
+const BOARD_SIZE = 5;
 const PAIRS = [
   ['M', 'W'], ['P', 'R'], ['B', 'D'], ['V', 'U'],
   ['0', 'O'], ['J', 'L'], ['C', 'G'], ['E', 'F'],
@@ -17,20 +17,18 @@ function generateRow(row, columns, chars) {
     rowPattern.push(chars[(row + column) % 2]);
   }
 
-  return rowPattern.join(' ');
+  return rowPattern;
 }
 
-function confusionPattern(size, chars) {
+function confusionBoard(size, chars) {
   let pattern = [];
   const rows = size;
   const columns = size;
 
   for (let row = 0; row < rows; row++) {
-    pattern.push(generateRow(row, columns, chars).split(' '));
+    pattern.push(generateRow(row, columns, chars));
   }
 
-  console.log(pattern);
-  
   return pattern;
 }
 
@@ -38,14 +36,17 @@ function encodeChar(char, alphabets) {
   const key = randomNumber(10);
   const position = (alphabets.indexOf(char) + key) % alphabets.length;
 
+  console.log(`key: ${key}`);
+  console.log(`position: ${position}`);
+    
   return alphabets[position];
 }
 
 function pickOddChar(pair, alphabets) {
   const oddChar = encodeChar(pair[0], alphabets);
 
-  if (pair.join('').includes(oddChar)) {
-    return alphabets.indexOf(oddChar) + 1;
+  if (pair[1] === oddChar && pair[0] === oddChar) {
+    return alphabets[alphabets.indexOf(oddChar) + 1];
   }
   return oddChar;
 }
@@ -57,19 +58,33 @@ function generateRandomCell(boardSize) {
   return [row, column];
 }
 
+function boardToPattern(board) {
+  const pattern = [];
+
+  for (let row = 0; row < board.length; row++) {
+    pattern.push(board[row].join(''));    
+  }
+
+  return pattern.join('\n');
+}
+
 function main() {
   const pairIndex = randomNumber(PAIRS.length);
   const pair = PAIRS[pairIndex];
   const oddChar = pickOddChar(pair, ALPHABETS);
   const randomCell = generateRandomCell(BOARD_SIZE);
-  const pattern = confusionPattern(BOARD_SIZE, pair);
+  const board = confusionBoard(BOARD_SIZE, pair);
   const randomRow = randomCell[0];
   const randomCol = randomCell[1];
-  console.log(randomRow, randomCol, oddChar);
-  console.log(pattern);
 
-  pattern[randomRow][randomCol] = oddChar;
+  board[randomRow][randomCol] = oddChar;
 
+  const pattern = boardToPattern(board);
+
+  console.log(oddChar);
+  // console.log(board[randomRow][randomCol]);
+  // console.log(board);
+  console.log(randomRow, randomCol);
   console.log(pattern);
 }
 
