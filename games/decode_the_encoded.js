@@ -9,14 +9,6 @@ function logDashes() {
   console.log('-'.repeat(30));
 }
 
-function logEmptyLine() {
-  console.log();
-}
-
-function getAlphabet(n, alphabets) {
-  return alphabets[n];
-}
-
 function getAlphabetPosition(alphabet, alphabets) {
   return alphabets.indexOf(alphabet);
 }
@@ -27,9 +19,8 @@ function encodeWord(word, code, alphabets) {
   for (let index = 0; index < word.length; index++) {
     const charPosition = getAlphabetPosition(word[index], alphabets);
     const encodedPosition = (charPosition + code) % ALPHABETS.length;
-    encodedWord += getAlphabet(encodedPosition, alphabets);
+    encodedWord += alphabets[encodedPosition];
   }
-
   return encodedWord;
 }
 
@@ -44,15 +35,13 @@ function displayInstructions(keyStartRange, keyEndRange) {
   console.log(`->  key will be a number between ${keyStartRange} and ${keyEndRange}`);
   console.log(`->  chances will decrease if you make wrong guess`);
   console.log(`->  powers will decrease if you take a clue`);
+  console.log(`\n->  NOTE: Shift the word backwards by the value of the key`);
   logDashes();
 }
 
 function askForGuess() {
+  logDashes();
   return prompt('Guess the decoded word: ');
-}
-
-function askForClue() {
-  return confirm('Do you want clue?');
 }
 
 function isEven(number) {
@@ -64,22 +53,19 @@ function giveClue(key) {
   return `key is an ${clue} number`;
 }
 
-function hasGuessed(actualWord, guessedWord) {
-  return actualWord === guessedWord;
-}
-
-function game(actualWord, key, encodedWord, powers, chances) {
-
-
-  console.log(`Take the help of this:\n${magenta(ALPHABETS)}`);
+function details(powers, chances, encodedWord) {
+  console.log(`\nTake help of this:\n${magenta(ALPHABETS)}`);
   logDashes();
   console.log(`${powers} power`);
   console.log(`${chances} chances`);
   console.log(`Decode: ${encodedWord}`);
+}
+
+function askForClue(powers, key) {
   let wantClue; 
   if (powers > 0) {
     logDashes();
-    wantClue = askForClue();
+    wantClue = confirm('Do you want clue?');
   }
   
   if (wantClue) {
@@ -87,30 +73,34 @@ function game(actualWord, key, encodedWord, powers, chances) {
     powers--;
     console.log(`${powers} powers left`);
   }
-  logDashes();
-  const guessedWord = askForGuess();
-  logEmptyLine();
 
-  if (hasGuessed(actualWord, guessedWord)) {
-    console.log('you won');
+  return powers;
+}
+
+function game(actualWord, key, encodedWord, powers, chances) {
+  details(powers, chances, encodedWord);
+
+  const powersLeft = askForClue(powers, key);
+  const guessedWord = askForGuess();
+
+  if (actualWord === guessedWord) {
+    console.log('you won\n');
     return;
   }
 
   chances--;
   if (chances === 0) {
     logDashes();
-    console.log(`Thee word is: ${actualWord}`);
-    
     console.log('OOPSY!, you ran out of chances');
+    console.log(`The word is: ${actualWord}`);
+    console.log(`The key is: ${key}`);
     return;
   }
 
   console.clear();
   console.log(`Wrong guess`);
-  // console.log(`${chances} chances`);
   logDashes();
-  
-  game(actualWord, key, encodedWord, powers, chances);
+  game(actualWord, key, encodedWord, powersLeft, chances);
 }
 
 function main() {
@@ -122,21 +112,15 @@ function main() {
   let powers = 1;
   let chances = 5;
 
-  
   displayInstructions(keyStartRange, keyEndRange);
-  console.log(`->  ⚡️${powers} powers`);
+  console.log(`->  ⚡️${powers} power`);
   console.log(`->  ${chances} chances\n`);
-  // console.log(`Take the help of this:\n${magenta(ALPHABETS)}`);
 
-
-  const shouldStart = confirm('\n\nWant to Start the game');
-  logEmptyLine();
+  const isStart = confirm('\nWant to Start the game');
   
-
-  if (shouldStart) {
+  if (isStart) {
     game(actualWord, key, encodedWord, powers, chances);
   }
-
 }
 
 main();
