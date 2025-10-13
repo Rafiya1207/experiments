@@ -9,15 +9,15 @@ function logDashes() {
   console.log('-'.repeat(30));
 }
 
-function getAlphabetPosition(alphabet, alphabets) {
-  return alphabets.indexOf(alphabet);
+function getAlphabetPosition(alphabet) {
+  return ALPHABETS.indexOf(alphabet);
 }
 
 function encodeWord(word, code, alphabets) {
   let encodedWord = '';
 
   for (let index = 0; index < word.length; index++) {
-    const charPosition = getAlphabetPosition(word[index], alphabets);
+    const charPosition = getAlphabetPosition(word[index]);
     const encodedPosition = (charPosition + code) % ALPHABETS.length;
     encodedWord += alphabets[encodedPosition];
   }
@@ -62,12 +62,12 @@ function details(powers, chances, encodedWord) {
 }
 
 function askForClue(powers, key) {
-  let wantClue; 
+  let wantClue;
   if (powers > 0) {
     logDashes();
     wantClue = confirm('Do you want clue?');
   }
-  
+
   if (wantClue) {
     console.log(giveClue(key));
     powers--;
@@ -77,6 +77,25 @@ function askForClue(powers, key) {
   return powers;
 }
 
+function guessedDifference(actualWord, guessedWord) {
+  const guessedWordPosition = getAlphabetPosition(guessedWord[0]);
+  const actualWordPosition = getAlphabetPosition(actualWord[0]);
+
+  return Math.abs(actualWordPosition - guessedWordPosition);
+}
+
+function logDifference(actualWord, guessedWord, key) {
+  const diff = guessedDifference(actualWord, guessedWord);
+  let message = `🔴 Wrong Guess`;
+  console.log(diff);
+
+  if (diff + 1 === key || diff - 1 === key) {
+    message = `🟡 Your guess is close to actual word`;
+  }
+  console.log(message);
+  logDashes();
+}
+
 function game(actualWord, key, encodedWord, powers, chances) {
   details(powers, chances, encodedWord);
 
@@ -84,7 +103,7 @@ function game(actualWord, key, encodedWord, powers, chances) {
   const guessedWord = askForGuess();
 
   if (actualWord === guessedWord) {
-    console.log('you won\n');
+    console.log('🎉 you won\n');
     return;
   }
 
@@ -98,8 +117,7 @@ function game(actualWord, key, encodedWord, powers, chances) {
   }
 
   console.clear();
-  console.log(`Wrong guess`);
-  logDashes();
+  // logDifference(actualWord, guessedWord, key);
   game(actualWord, key, encodedWord, powersLeft, chances);
 }
 
@@ -117,8 +135,9 @@ function main() {
   console.log(`->  ${chances} chances\n`);
 
   const isStart = confirm('\nWant to Start the game');
-  
+
   if (isStart) {
+    console.clear();
     game(actualWord, key, encodedWord, powers, chances);
   }
 }
