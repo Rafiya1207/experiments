@@ -1,10 +1,10 @@
-const equation = (r, x, y) => {
-  const sint = (y - r) / r;
-  const cost = (x - r) / r;
+const equation = (radius, x, y) => {
+  const sint = (y - radius) / radius;
+  const cost = (x - radius) / radius;
 
   return Math.round(
-    Math.sqrt(Math.pow(cost, 2) + Math.pow(sint, 2)) * r,
-  ) + r;
+    Math.sqrt(Math.pow(cost, 2) + Math.pow(sint, 2)) * radius,
+  ) + radius;
 };
 
 const circleOf = (radius) => {
@@ -13,7 +13,7 @@ const circleOf = (radius) => {
 
   for (let x = 0; x < diameter + 1; x++) {
     for (let y = 0; y < diameter + 1; y++) {
-      const char = equation(r, x, y) === r + r ? "@ " : "  ";
+      const char = equation(radius, x, y) === radius + radius ? "@ " : "  ";
       circle.push(char);
     }
     circle.push("\n");
