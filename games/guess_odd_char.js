@@ -140,6 +140,12 @@ async function main() {
     return;
   }
 
+  console.log(
+    'Find the one character that appears only once on each board.\n' +
+    'Each round, enter every odd character you have found so far, in order.\n' +
+    'Your score is the number of correct rounds; one wrong guess ends the game.\n'
+  );
+
   const input = createInterface({ input: process.stdin, crlfDelay: Infinity });
   try {
     const answers = input[Symbol.asyncIterator]();
