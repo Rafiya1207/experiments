@@ -1,0 +1,20 @@
+class GuessOddChar < Formula
+  desc "Terminal game for spotting the odd character"
+  homepage "https://github.com/Rafiya1207/experiments/tree/main/games"
+  url @URL@
+  version @VERSION@
+  sha256 @SHA256@
+
+  depends_on "node"
+
+  def install
+    libexec.install "guess_odd_char.js", "package.json"
+    (bin/"guess-odd-char").write_env_script Formula["node"].opt_bin/"node",
+                                           ["\"#{libexec}/guess_odd_char.js\""], {}
+  end
+
+  test do
+    assert_equal version.to_s, shell_output("#{bin}/guess-odd-char --version").strip
+    assert_match "Score: 0", pipe_output("#{bin}/guess-odd-char", "?\n", 0)
+  end
+end

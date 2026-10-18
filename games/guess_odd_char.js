@@ -1,3 +1,8 @@
+#!/usr/bin/env node
+
+const { createInterface } = require('node:readline');
+const { version } = require('./package.json');
+
 const BOARD_SIZE = 20;
 const ODD_CHARS = [];
 
@@ -82,16 +87,17 @@ function createOddCharBoard(PAIRS, ALPHABETS, BOARD_SIZE) {
   return [board, currentOddChar];
 }
 
-function askForGuess() {
-  const response = prompt('Enter odd character: ');
-  return response.toUpperCase();
+async function askForGuess(answers) {
+  process.stdout.write('Enter odd character: ');
+  const response = await answers.next();
+  return response.done ? null : response.value.trim().toUpperCase();
 }
 
 function checkGuess(expected, guessed) {
   return expected === guessed;
 }
 
-function main() {
+async function playRound(answers) {
   const oddCharBoard = createOddCharBoard(PAIRS, ALPHABETS, BOARD_SIZE);
   const board = oddCharBoard[0];
   const oddChar = ODD_CHARS.join('');
@@ -99,18 +105,53 @@ function main() {
   const pattern = boardToPattern(board);
 
   console.log(pattern);
-  const response = askForGuess();
+  const response = await askForGuess(answers);
+  if (response === null) {
+    console.log('\nScore:', ODD_CHARS.length - 1);
+    return false;
+  }
   const isCorrect = checkGuess(oddChar, response);
-  console.clear();
+  if (process.stdout.isTTY) console.clear();
   const symbol = isCorrect ? '👍🏻' : '👎🏻';
   console.log(symbol);
 
   if (!isCorrect) {
     console.log('Score:', ODD_CHARS.length - 1);
     console.log(oddChar);
-    return;
+    return false;
   }
-  main();
+  return true;
 }
 
-main();
+async function main() {
+  const args = process.argv.slice(2);
+  if (args.length === 1 && ['--version', '-v'].includes(args[0])) {
+    console.log(version);
+    return;
+  }
+  if (args.length > 0) {
+    const help = args.length === 1 && ['--help', '-h'].includes(args[0]);
+    console[help ? 'log' : 'error'](
+      'Usage: guess-odd-char [--help | --version]\n\n' +
+      'Find the odd character in each board. Enter all odd characters found\n' +
+      'so far, in order. A wrong guess ends the game. Press Ctrl-D to quit.'
+    );
+    if (!help) process.exitCode = 1;
+    return;
+  }
+
+  const input = createInterface({ input: process.stdin, crlfDelay: Infinity });
+  try {
+    const answers = input[Symbol.asyncIterator]();
+    while (await playRound(answers)) {
+      // Keep playing until an incorrect guess or end of input.
+    }
+  } finally {
+    input.close();
+  }
+}
+
+main().catch(error => {
+  console.error(error.message);
+  process.exitCode = 1;
+});

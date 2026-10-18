@@ -1,0 +1,16 @@
+{
+  "name": "guess-odd-char",
+  "version": "1.0.0",
+  "description": "Terminal game for spotting the odd character",
+  "private": true,
+  "bin": {
+    "guess-odd-char": "guess_odd_char.js"
+  },
+  "scripts": {
+    "test": "node --test tests/guess-odd-char.test.js",
+    "package:brew": "node scripts/package-brew.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
